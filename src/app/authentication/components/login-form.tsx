@@ -120,7 +120,7 @@ const LoginForm = () => {
           </Button>
 
           <Button variant="outline" className="w-full">
-            Login with Google
+            Login com Google
           </Button>
         </CardFooter>
       </Card>
