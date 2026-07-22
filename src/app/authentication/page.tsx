@@ -7,7 +7,7 @@ const AuthenticationPage = () => {
   return (
     <div className="flex min-h-dvh w-full items-center justify-center">
       <Tabs defaultValue="login" className="w-[400px]">
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login">Login</TabsTrigger>
           <TabsTrigger value="register">Criar conta</TabsTrigger>
         </TabsList>
