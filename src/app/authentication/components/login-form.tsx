@@ -1,7 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -15,9 +18,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { authClient } from "@/lib/auth-client";
 
 const registerSchema = z.object({
-  name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
   email: z
     .string()
     .trim()
@@ -29,24 +32,38 @@ const registerSchema = z.object({
     .min(8, { message: "A senha deve ter pelo menos 8 caracteres" }),
 });
 
-function onSubmit(data: z.infer<typeof registerSchema>) {
-  console.log(data);
-}
-
 const LoginForm = () => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof registerSchema>>({
-    mode: "onChange",
+    mode: "onBlur",
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
   });
 
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
+    await authClient.signIn.email(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+        onError: () => {
+          toast.error("E-mail ou senha inválidos");
+        },
+      },
+    );
+  }
+
   return (
     <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}>
-      <Card className="w-full max-w-sm space-y-4">
+      <Card className="w-full space-y-4">
         <CardHeader>
           <CardTitle>Faça Login</CardTitle>
 
@@ -115,8 +132,16 @@ const LoginForm = () => {
         </CardContent>
 
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
-            Login
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              "Entrar"
+            )}
           </Button>
 
           <Button variant="outline" className="w-full">
