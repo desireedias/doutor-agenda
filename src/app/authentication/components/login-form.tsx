@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
 
-const registerSchema = z.object({
+const loginSchema = z.object({
   email: z
     .string()
     .trim()
@@ -35,16 +35,16 @@ const registerSchema = z.object({
 const LoginForm = () => {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof registerSchema>>({
+  const form = useForm<z.infer<typeof loginSchema>>({
     mode: "onBlur",
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof registerSchema>) {
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
     await authClient.signIn.email(
       {
         email: values.email,
