@@ -98,18 +98,16 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
-              <DropdownMenuTrigger>
-                <SidebarMenuButton size="lg">
-                  <Avatar>
-                    <AvatarFallback>T</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm">{session.data?.user.clinic.name}</p>
-                    <p className="text-muted-foreground text-sm">
-                      {session.data?.user.email}
-                    </p>
-                  </div>
-                </SidebarMenuButton>
+              <DropdownMenuTrigger render={<SidebarMenuButton size="lg" />}>
+                <Avatar>
+                  <AvatarFallback>T</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-sm">{session.data?.user?.clinic?.name}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {session.data?.user.email}
+                  </p>
+                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem onClick={HandleSignOut}>
