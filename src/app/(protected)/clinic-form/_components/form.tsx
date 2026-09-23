@@ -38,7 +38,7 @@ export const ClinicForm = () => {
     }
   };
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y=4">
       <FieldGroup className="flex flex-col gap-2">
         <Controller
           name="name"
