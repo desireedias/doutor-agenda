@@ -1,8 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAction } from "next-safe-action/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import { toast } from "sonner";
 import z from "zod";
 
+import { upsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -61,7 +64,11 @@ const formSchema = z
     path: ["availableToTime"],
   });
 
-const UpsertDoctorForm = () => {
+interface UpsertDoctorFormProp {
+  onSuccess?: () => void;
+}
+
+const UpsertDoctorForm = ({ onSuccess }: UpsertDoctorFormProp) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,8 +82,23 @@ const UpsertDoctorForm = () => {
     },
   });
 
+  const upsertDoctorAction = useAction(upsertDoctor, {
+    onSuccess: () => {
+      toast.success("Médico adicionado com sucesso");
+      onSuccess?.();
+    },
+    onError: () => {
+      toast.error("Erro ao adicionar médico");
+    },
+  });
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    upsertDoctorAction.execute({
+      ...values,
+      availableFromWeekDay: parseInt(values.availableFromWeekDay),
+      availableToWeekDay: parseInt(values.availableToWeekDay),
+      appointmentPriceInCents: values.appointmentPrice * 100,
+    });
   };
 
   return (
@@ -294,7 +316,7 @@ const UpsertDoctorForm = () => {
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <Label htmlFor={field.name}>
-                  Horário inicial de disponibilidade
+                  Horário final de disponibilidade
                 </Label>
 
                 <Select
@@ -335,7 +357,9 @@ const UpsertDoctorForm = () => {
           />
         </FieldGroup>
         <DialogFooter>
-          <Button type="submit">Adicionar</Button>
+          <Button type="submit" disabled={upsertDoctorAction.isPending}>
+            {upsertDoctorAction.isExecuting ? "Adicionando" : "Adicionar"}
+          </Button>
         </DialogFooter>
       </form>
     </DialogContent>
