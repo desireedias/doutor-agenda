@@ -15,8 +15,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,27 +28,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { appointmentsTable } from "@/db/schema";
+
+type AppointmentWithRelations = typeof appointmentsTable.$inferSelect & {
+  patient: {
+    id: string;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    sex: "male" | "female";
+  };
+  doctor: {
+    id: string;
+    name: string;
+    specialty: string;
+  };
+};
 
 interface AppointmentsTableActionsProps {
-  appointment: {
-    id: string;
-    patient: {
-      name: string;
-    };
-  };
+  appointment: AppointmentWithRelations;
 }
 
 const AppointmentsTableActions = ({
   appointment,
 }: AppointmentsTableActionsProps) => {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const deleteAppointmentAction = useAction(deleteAppointment, {
     onSuccess: () => {
       toast.success("Agendamento deletado com sucesso.");
-      setIsDeleteDialogOpen(false);
     },
-
     onError: () => {
       toast.error("Erro ao deletar agendamento.");
     },
@@ -54,46 +65,41 @@ const AppointmentsTableActions = ({
 
   const handleDeleteAppointmentClick = () => {
     if (!appointment) return;
-
-    deleteAppointmentAction.execute({
-      id: appointment.id,
-    });
+    deleteAppointmentAction.execute({ id: appointment.id });
   };
 
   return (
-    <>
+    <Dialog>
       <DropdownMenu>
-        <DropdownMenuTrigger render={<Button variant="ghost" size="icon" />}>
+        <DropdownMenuTrigger render={<Button variant="ghost" />}>
           <MoreVerticalIcon className="h-4 w-4" />
         </DropdownMenuTrigger>
-
         <DropdownMenuContent>
           <DropdownMenuGroup>
             <DropdownMenuLabel>{appointment.patient.name}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              <TrashIcon />
+              Excluir
+            </DropdownMenuItem>
           </DropdownMenuGroup>
-
-          <DropdownMenuSeparator />
-
-          <DropdownMenuItem onSelect={() => setIsDeleteDialogOpen(true)}>
-            <TrashIcon />
-            Excluir
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogTrigger />
 
-      <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Tem certeza que deseja deletar esse agendamento?
+              Tem certeza que deseja deletar esse paciente?
             </AlertDialogTitle>
 
             <AlertDialogDescription>
-              Essa ação não pode ser revertida. Isso irá deletar o agendamento
-              permanentemente.
+              Essa ação não pode ser revertida. Isso irá deletar o paciente e
+              todas as consultas agendadas.
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -102,16 +108,14 @@ const AppointmentsTableActions = ({
 
             <AlertDialogAction
               onClick={handleDeleteAppointmentClick}
-              disabled={deleteAppointmentAction.status === "executing"}
+              disabled={deleteAppointmentAction.isPending}
             >
-              {deleteAppointmentAction.status === "executing"
-                ? "Deletando..."
-                : "Deletar"}
+              {deleteAppointmentAction.isPending ? "Excluindo..." : "Excluir"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </Dialog>
   );
 };
 

@@ -66,7 +66,10 @@ const PatientsTableActions = ({ patient }: PatientsTableActionsProps) => {
               <Edit2Icon />
               Editar
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setDeleteDialogOpen(true)}>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
               <TrashIcon />
               Excluir
             </DropdownMenuItem>
@@ -93,6 +96,7 @@ const PatientsTableActions = ({ patient }: PatientsTableActionsProps) => {
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
 
             <AlertDialogAction
+              variant="destructive"
               onClick={handleDeletePatientClick}
               disabled={deletePatientAction.isPending}
             >
