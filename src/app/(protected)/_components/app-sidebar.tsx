@@ -40,7 +40,7 @@ const items = [
   },
   {
     title: "Agenndamentos",
-    url: "/appointements",
+    url: "/appointments",
     icon: CalendarDays,
   },
   {
