@@ -5,6 +5,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { Toaster } from "sonner";
 
 import { cn } from "@/lib/utils";
+import { ReactQueryProvider } from "@/providers/react-query";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -33,7 +34,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ReactQueryProvider>{children}</ReactQueryProvider>
         <Toaster position="bottom-center" richColors theme="light" />
       </body>
     </html>

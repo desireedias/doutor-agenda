@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import dayjs from "dayjs";
 import { CalendarIcon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
@@ -10,6 +12,7 @@ import { toast } from "sonner";
 import z from "zod";
 
 import { addAppointment } from "@/actions/add-appointment";
+import { getAvailableTimes } from "@/actions/get-available-times";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -73,16 +76,29 @@ const AddAppointmentForm = ({
     shouldUnregister: true,
     resolver: zodResolver(formSchema),
     defaultValues: {
-      patientId: appointment?.patientId ?? "",
-      doctorId: appointment?.doctorId ?? "",
+      patientId: "",
+      doctorId: "",
       appointmentPrice: 0,
-      date: appointment?.date ?? undefined,
+      date: undefined,
       time: "",
     },
   });
 
   const selectedPatientId = form.watch("patientId");
   const selectedDoctorId = form.watch("doctorId");
+  const selectedDate = form.watch("date");
+
+  const { data: availableTimes } = useQuery({
+    queryKey: ["available-times", selectedDate, selectedDoctorId],
+    queryFn: () =>
+      getAvailableTimes({
+        date: dayjs(selectedDate!).format("YYYY-MM-DD"),
+        doctorId: selectedDoctorId,
+      }),
+    enabled: !!selectedDate && !!selectedDoctorId,
+  });
+
+  console.log(availableTimes);
 
   // Atualizar o preço quando o médico for selecionado
   useEffect(() => {
@@ -273,7 +289,7 @@ const AddAppointmentForm = ({
                     <CalendarIcon />
 
                     {field.value ? (
-                      format(field.value, "PPP")
+                      format(field.value, "PPP", { locale: ptBR })
                     ) : (
                       <span>Selecione uma data</span>
                     )}
@@ -306,7 +322,7 @@ const AddAppointmentForm = ({
                   name={field.name}
                   value={field.value}
                   onValueChange={field.onChange}
-                  disabled={!selectedPatientId || !selectedDoctorId}
+                  disabled={!isDateTimeEnabled}
                 >
                   <SelectTrigger
                     id={field.name}
@@ -314,21 +330,23 @@ const AddAppointmentForm = ({
                     aria-invalid={fieldState.invalid}
                     className="w-full"
                   >
-                    <SelectValue placeholder="Selecione um horário" />
+                    <SelectValue placeholder="Selecione um horário">
+                      {field.value
+                        ? field.value.substring(0, 5)
+                        : "Selecione um horário"}
+                    </SelectValue>
                   </SelectTrigger>
 
                   <SelectContent>
-                    {/* As opções serão implementadas depois */}
-                    <SelectItem value="08:00">08:00</SelectItem>
-                    <SelectItem value="09:00">09:00</SelectItem>
-                    <SelectItem value="10:00">10:00</SelectItem>
-                    <SelectItem value="11:00">11:00</SelectItem>
-                    <SelectItem value="12:00">12:00</SelectItem>
-                    <SelectItem value="13:00">13:00</SelectItem>
-                    <SelectItem value="14:00">14:00</SelectItem>
-                    <SelectItem value="15:00">15:00</SelectItem>
-                    <SelectItem value="16:00">16:00</SelectItem>
-                    <SelectItem value="17:00">17:00</SelectItem>
+                    {availableTimes?.data?.map((time) => (
+                      <SelectItem
+                        key={time.value}
+                        value={time.value}
+                        disabled={!time.available}
+                      >
+                        {time.label} {!time.available && "(Indisponível)"}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
 

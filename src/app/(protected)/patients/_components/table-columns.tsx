@@ -25,6 +25,10 @@ export const patientTableColumns: ColumnDef<DataTableFeatures, Patient>[] = [
   {
     accessorKey: "sex",
     header: "Sexo",
+    cell: (params) => {
+      const patient = params.row.original;
+      return patient.sex === "female" ? "Feminino" : "Masculino";
+    },
   },
   {
     id: "actions",

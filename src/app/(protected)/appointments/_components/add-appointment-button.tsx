@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { doctorsTable, patientsTable } from "@/db/schema";
 
-import AddAppointmentForm from "./_components/add-appointment-form";
+import AddAppointmentForm from "./add-appointment-form";
 
 interface AppointmentButtonProps {
   patients: (typeof patientsTable.$inferSelect)[];

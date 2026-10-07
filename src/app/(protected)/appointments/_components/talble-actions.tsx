@@ -94,12 +94,12 @@ const AppointmentsTableActions = ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Tem certeza que deseja deletar esse paciente?
+              Tem certeza que deseja deletar esse agendamento?
             </AlertDialogTitle>
 
             <AlertDialogDescription>
-              Essa ação não pode ser revertida. Isso irá deletar o paciente e
-              todas as consultas agendadas.
+              Essa ação não pode ser revertida. Isso irá deletar o agendamento
+              permanentemente.
             </AlertDialogDescription>
           </AlertDialogHeader>
 

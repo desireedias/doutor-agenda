@@ -30,20 +30,10 @@ export const addAppointment = actionClient
       .set("minute", parseInt(parsedInput.time.split(":")[1]))
       .toDate();
 
-    await db
-      .insert(appointmentsTable)
-      .values({
-        ...parsedInput,
-        id: parsedInput.doctorId,
-        clinicId: session?.user.clinic?.id,
-        date: appointmetDateTime,
-      })
-      .onConflictDoUpdate({
-        target: [appointmentsTable.id],
-        set: {
-          ...parsedInput,
-          date: appointmetDateTime,
-        },
-      });
+    await db.insert(appointmentsTable).values({
+      ...parsedInput,
+      clinicId: session?.user.clinic?.id,
+      date: appointmetDateTime,
+    });
     revalidatePath("/appointments");
   });
