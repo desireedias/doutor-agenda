@@ -33,7 +33,7 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
     .join("");
   const availability = getAvailability(doctor);
   return (
-    <Card>
+    <Card className="min-h-[350px] max-w-[300px]">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Avatar className="h-15 w-15">
