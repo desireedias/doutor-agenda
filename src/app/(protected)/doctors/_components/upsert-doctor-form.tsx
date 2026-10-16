@@ -423,7 +423,7 @@ const UpsertDoctorForm = ({
             <AlertDialog>
               <AlertDialogTrigger
                 render={
-                  <Button variant="outline">
+                  <Button variant="destructive">
                     {" "}
                     <TrashIcon />
                     Excluir médico
@@ -442,8 +442,12 @@ const UpsertDoctorForm = ({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeleteDoctorClick}>
-                    Continuar
+                  <AlertDialogAction
+                    onClick={handleDeleteDoctorClick}
+                    variant="destructive"
+                    disabled={deleteDoctorAction.isPending}
+                  >
+                    {deleteDoctorAction.isExecuting ? "Excluindo" : "Continuar"}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

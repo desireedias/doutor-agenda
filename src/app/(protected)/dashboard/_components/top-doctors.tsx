@@ -26,32 +26,41 @@ export default function TopDoctors({ doctors }: TopDoctorsProps) {
 
         {/* Doctors List */}
         <div className="space-y-6">
-          {doctors.map((doctor) => (
-            <div key={doctor.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback className="bg-gray-100 text-lg font-medium text-gray-600">
-                    {doctor.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="text-sm">{doctor.name}</h3>
-                  <p className="text-muted-foreground text-sm">
-                    {doctor.specialty}
-                  </p>
+          {doctors.length > 0 ? (
+            doctors.map((doctor) => (
+              <div
+                key={doctor.id}
+                className="flex items-center justify-between"
+              >
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className="bg-gray-100 text-lg font-medium text-gray-600">
+                      {doctor.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h3 className="text-sm">{doctor.name}</h3>
+                    <p className="text-muted-foreground text-sm">
+                      {doctor.specialty}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-muted-foreground text-sm font-medium">
+                    {doctor.appointments} agend.
+                  </span>
                 </div>
               </div>
-              <div className="text-right">
-                <span className="text-muted-foreground text-sm font-medium">
-                  {doctor.appointments} agend.
-                </span>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-muted-foreground py-8 text-center text-sm">
+              Nenhum médico cadastrado.
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>
