@@ -1,3 +1,6 @@
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
 import {
   PageContainer,
   PageContent,
@@ -6,10 +9,17 @@ import {
   PageHeaderContent,
   PageTitle,
 } from "@/components/ui/page-container";
+import { auth } from "@/lib/auth";
 
 import { SubscriptionPlan } from "./_components/subscription-plan";
 
-const SubscriptionPage = () => {
+const SubscriptionPage = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    redirect("/login");
+  }
   return (
     <PageContainer>
       <PageHeader>
@@ -19,7 +29,11 @@ const SubscriptionPage = () => {
         </PageHeaderContent>
       </PageHeader>
       <PageContent>
-        <SubscriptionPlan className="w-87.5" />
+        <SubscriptionPlan
+          className="w-87.5"
+          active={session.user.plan === "essential"}
+          userEmail={session.user.email}
+        />
       </PageContent>
     </PageContainer>
   );
