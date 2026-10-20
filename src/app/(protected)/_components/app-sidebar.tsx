@@ -61,6 +61,16 @@ export function AppSidebar() {
   const session = authClient.useSession();
   const pathname = usePathname();
 
+  const clinicName = session.data?.user?.clinic?.name ?? "";
+
+  const clinicInitials = clinicName
+    .split(" ")
+    .filter(Boolean)
+    .map((name) => name[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   const HandleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
@@ -70,6 +80,7 @@ export function AppSidebar() {
       },
     });
   };
+
   return (
     <Sidebar>
       <SidebarHeader className="border-b p-4">
@@ -117,7 +128,7 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger render={<SidebarMenuButton size="lg" />}>
                 <Avatar>
-                  <AvatarFallback>T</AvatarFallback>
+                  <AvatarFallback>{clinicInitials}</AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="text-sm">{session.data?.user?.clinic?.name}</p>

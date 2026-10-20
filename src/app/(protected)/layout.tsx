@@ -1,8 +1,31 @@
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { auth } from "@/lib/auth";
 
 import { AppSidebar } from "./_components/app-sidebar";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    redirect("/authentication");
+  }
+
+  if (!session.user.plan) {
+    redirect("/new-subscription");
+  }
+  if (!session.user.clinic) {
+    redirect("/clinic-form");
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />
