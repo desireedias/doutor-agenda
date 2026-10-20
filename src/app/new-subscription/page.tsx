@@ -1,4 +1,4 @@
-import { ArrowRight, Check, CircleHelp, ClipboardList, Stethoscope } from "lucide-react";
+import { ArrowRight, Check, ClipboardList, Stethoscope } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { auth } from "@/lib/auth";
-
-import { SubscriptionPlan } from "../(protected)/subscription/_components/subscription-plan";
 
 const steps = [
   {
@@ -38,8 +36,8 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-muted/30 px-6 py-8 sm:py-12">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-10">
+    <main className="flex min-h-screen items-center justify-center bg-muted/30 px-6 py-8 sm:py-12">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-10">
         <header className="flex items-center gap-3">
           <div className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Stethoscope className="size-5" aria-hidden="true" />
@@ -50,7 +48,7 @@ export default async function Home() {
           </div>
         </header>
 
-        <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+        <section className="flex flex-col gap-8">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-4">
               <Badge variant="secondary" className="w-fit gap-2 px-3 py-1">
@@ -92,40 +90,12 @@ export default async function Home() {
                     </div>
                   ))}
                 </div>
+                <Button className="w-full" size="lg" render={<a href="/plans" />}>
+                  Conhecer os planos
+                  <ArrowRight data-icon="inline-end" aria-hidden="true" />
+                </Button>
               </CardContent>
             </Card>
-          </div>
-
-          <Card className="border-primary/20 bg-background shadow-sm">
-            <CardContent className="flex flex-col gap-6 p-6 sm:p-8">
-              <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <ClipboardList className="size-6" aria-hidden="true" />
-              </div>
-              <div className="flex flex-col gap-2">
-                <h2 className="text-xl font-semibold">Vamos escolher seu plano</h2>
-                <p className="leading-7 text-muted-foreground">
-                  Comece conhecendo as opções disponíveis. Você poderá escolher o plano que melhor acompanha o momento da sua clínica.
-                </p>
-              </div>
-              <Button className="w-full" size="lg" render={<a href="#planos" />}>
-                Conhecer os planos
-                <ArrowRight data-icon="inline-end" aria-hidden="true" />
-              </Button>
-              <div className="flex items-start gap-3 rounded-lg bg-muted/60 p-4 text-sm text-muted-foreground">
-                <CircleHelp className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <p>Você poderá ajustar sua escolha depois, conforme as necessidades do seu negócio.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <section id="planos" className="scroll-mt-8 border-t pt-10">
-          <div className="mx-auto flex w-full max-w-md flex-col gap-4">
-            <div className="text-center">
-              <h2 className="text-2xl font-semibold tracking-tight">Escolha o plano ideal</h2>
-              <p className="mt-2 text-sm text-muted-foreground">Comece a organizar sua clínica hoje.</p>
-            </div>
-            <SubscriptionPlan userEmail={session.user.email} />
           </div>
         </section>
 
