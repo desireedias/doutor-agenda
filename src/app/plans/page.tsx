@@ -16,14 +16,18 @@ export default async function PlansPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-muted/30 px-6 py-8 sm:py-12">
+    <main className="bg-muted/30 flex min-h-screen items-center justify-center px-6 py-8 sm:py-12">
       <div className="flex w-full max-w-md flex-col gap-6">
         <div className="text-center">
-          <Button variant="ghost" render={<a href="/new-subscription" />}>
+          <Button
+            nativeButton={false}
+            variant="ghost"
+            render={<a href="/new-subscription" />}
+          >
             Voltar para os primeiros passos
           </Button>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight">Planos</h1>
-          <p className="mt-2 text-muted-foreground">
+          <p className="text-muted-foreground mt-2">
             Escolha o plano ideal para começar a organizar sua clínica.
           </p>
         </div>
