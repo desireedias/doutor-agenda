@@ -1,12 +1,13 @@
-import { ArrowRight, Check, ClipboardList, Stethoscope } from "lucide-react";
+import { Check, ClipboardList, Stethoscope } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { auth } from "@/lib/auth";
+
+import { SubscriptionButton } from "./_components/subscription-button";
 
 const steps = [
   {
@@ -108,15 +109,7 @@ export default async function Home() {
                     </div>
                   ))}
                 </div>
-                <Button
-                  nativeButton={false}
-                  className="w-full"
-                  size="lg"
-                  render={<a href="/plans" />}
-                >
-                  Conhecer os planos
-                  <ArrowRight data-icon="inline-end" aria-hidden="true" />
-                </Button>
+                <SubscriptionButton />
               </CardContent>
             </Card>
           </div>

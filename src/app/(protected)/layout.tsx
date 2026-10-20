@@ -22,9 +22,6 @@ export default async function Layout({
   if (!session.user.plan) {
     redirect("/new-subscription");
   }
-  if (!session.user.clinic) {
-    redirect("/clinic-form");
-  }
 
   return (
     <SidebarProvider>
