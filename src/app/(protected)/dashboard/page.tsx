@@ -35,14 +35,18 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+  console.log("[layout] usuário:", !!session?.user);
+  console.log("[layout] plano:", session?.user?.plan);
+  console.log("[layout] clínica:", session?.user?.clinic);
   if (!session?.user) {
     redirect("/authentication");
   }
-  if (!session.user.clinic) {
-    redirect("/clinic-form");
-  }
   if (!session.user.plan) {
     redirect("/new-subscription");
+  }
+
+  if (!session.user.clinic) {
+    redirect("/clinic-form");
   }
 
   const { from, to } = await searchParams;
